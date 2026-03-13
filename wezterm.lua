@@ -10,7 +10,7 @@ local config  = wezterm.config_builder()
 -- Active les ligatures (=> != -> etc.) et une taille confortable.
 -- ─────────────────────────────────────────────────────────────
 config.font = wezterm.font('JetBrains Mono', { weight = 'Regular' })
-config.font_size = 13.0
+config.font_size = 12.0
 config.harfbuzz_features = { 'calt=1', 'clig=1', 'liga=1' } -- ligatures on
  
 -- ─────────────────────────────────────────────────────────────
@@ -100,6 +100,11 @@ if is_windows then
     { label = '  PowerShell',    args = { 'pwsh.exe', '-NoLogo' } },
     { label = '  CMD',           args = { 'cmd.exe' } },
   }
+  config.window_background_opacity = 0.95
+  config.window_decorations = "RESIZE"
+else
+  -- commenter si problème sous linux
+  config.window_background_opacity = 0.95
 end
  
 -- ─────────────────────────────────────────────────────────────
@@ -134,6 +139,7 @@ config.keys = {
   { key = '0', mods = 'CTRL', action = act.ResetFontSize    },
 
   { key = 'n', mods = 'CTRL|SHIFT', action = act.ShowLauncherArgs { flags = 'LAUNCH_MENU_ITEMS' } },
+  { key = 'l', mods = 'CTRL|SHIFT', action = act.ShowDebugOverlay },
 
 }
  
