@@ -133,8 +133,8 @@ config.keys = {
   -- Zoom panneau courant
   { key = 'z', mods = 'CTRL', action = act.TogglePaneZoomState },
   -- Copier / coller
-  { key = 'c', mods = 'CTRL', action = act.CopyTo  'Clipboard' },
-  { key = 'v', mods = 'CTRL', action = act.PasteFrom 'Clipboard' },
+  { key = 'c', mods = 'CTRL|SHIFT', action = act.CopyTo  'Clipboard' },
+  { key = 'v', mods = 'CTRL|SHIFT', action = act.PasteFrom 'Clipboard' },
   -- Augmenter / diminuer la taille de police
   { key = '+', mods = 'CTRL', action = act.IncreaseFontSize },
   { key = '-', mods = 'CTRL', action = act.DecreaseFontSize },
