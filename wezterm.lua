@@ -40,10 +40,12 @@ config.window_padding = {
 -- ─────────────────────────────────────────────────────────────
 -- Barre d'onglets
 -- ─────────────────────────────────────────────────────────────
-config.use_fancy_tab_bar      = true  
+config.window_decorations = "RESIZE"
+config.enable_tab_bar = true
+config.use_fancy_tab_bar      = true 
 config.tab_bar_at_bottom      = false
 config.hide_tab_bar_if_only_one_tab = false  -- toujours visible pour le style
- 
+
 -- Couleurs de la tab bar (assortie à Catppuccin Mocha)
 config.colors = {
   tab_bar = {
@@ -82,7 +84,7 @@ config.cursor_blink_rate      = 500  -- ms
 -- Comportement
 -- ─────────────────────────────────────────────────────────────
 config.scrollback_lines       = 10000
-config.enable_scroll_bar      = false
+config.enable_scroll_bar      = true
 config.audible_bell           = 'Disabled'
  
 -- ─────────────────────────────────────────────────────────────
