@@ -121,22 +121,33 @@ end
 
 wezterm.on('update-status', function(window, pane)
   local proc    = pane:get_foreground_process_name() or ''
-  -- Garde juste le nom de l'exécutable (sans le chemin complet)
   local exe     = proc:match('[^\\/]+$') or proc
   local key     = bg_key_for_process(exe)
   local bg_path = backgrounds[key]
 
   local overrides = window:get_config_overrides() or {}
 
-  -- Ne redéfinit que si ça a changé (évite les re-rendus inutiles)
-  if overrides.window_background_image ~= bg_path then
-    overrides.window_background_image = bg_path
-    overrides.window_background_image_hsb = {
-      brightness = 0.15,   -- assombrit l'image pour garder le texte lisible
-      saturation = 0.8,
-      hue        = 1.0,
-    }
+  if overrides.background ~= bg_path then
+    overrides.background = {
+      {
+        source = { Color = "#1e1e2e" }, -- fallback Catppuccin
+          width = "100%",
+          height = "100%",
+          opacity = 0.85,
+      },
+      {
+          source = { File = bg_path },
+          width = "Contain",
+          height = "Contain",
+          -- évite le zoom/crop
+          repeat_x = "NoRepeat",
+          repeat_y = "NoRepeat",
+          horizontal_align = "Center",
+          vertical_align   = "Middle",
 
+          opacity = 0.85,
+        },
+    }
 
     window:set_config_overrides(overrides)
   end
