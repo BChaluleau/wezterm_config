@@ -25,10 +25,7 @@ config.color_scheme = 'Catppuccin Mocha'
 -- ─────────────────────────────────────────────────────────────
 config.initial_cols = 120
 config.initial_rows = 32
- 
--- Légère transparence (0 = invisible, 1 = opaque)
-config.window_background_opacity = 0.95
- 
+
 -- Marges intérieures pour respirer
 config.window_padding = {
   left   = 12,
@@ -88,10 +85,68 @@ config.enable_scroll_bar      = true
 config.audible_bell           = 'Disabled'
  
 -- ─────────────────────────────────────────────────────────────
--- Shells disponibles (adapter les noms de distro WSL si besoin)
+-- Fonds d'écran personnalisés
+-- ─────────────────────────────────────────────────────────────
+
+local home = wezterm.home_dir
+local sep  = package.config:sub(1,1)  -- '/' ou '\'
+
+local function asset(name)
+  return home .. sep .. '.config' .. sep .. 'wezterm' .. sep .. 'backgrounds' .. sep .. name
+end
+
+-- config.window_background_image = asset("pshell.png")
+
+local backgrounds = {
+  wsl     = asset('ubuntu.jpg'),
+  ubuntu  = asset('ubuntu.jpg'),
+  pwsh    = asset('pshell.png'),
+  cmd     = asset('cmd.jpg'),
+  default = asset('default.png'),
+}
+
+-- Retourne la clé de background en fonction du nom de processus
+local function bg_key_for_process(proc)
+  if not proc then return 'default' end
+  proc = proc:lower()
+  if proc:find('pwsh') or proc:find('powershell') then return 'pwsh' end
+  if proc:find('cmd')                              then return 'cmd'  end
+  -- wsl.exe lance souvent bash/zsh/fish comme enfant ;
+  -- on détecte quand même wsl.exe au premier plan
+  if proc:find('wsl')                              then return 'wsl'  end
+  if proc:find('ubuntu')                           then return 'ubuntu' end
+  return 'default'
+end
+
+
+wezterm.on('update-status', function(window, pane)
+  local proc    = pane:get_foreground_process_name() or ''
+  -- Garde juste le nom de l'exécutable (sans le chemin complet)
+  local exe     = proc:match('[^\\/]+$') or proc
+  local key     = bg_key_for_process(exe)
+  local bg_path = backgrounds[key]
+
+  local overrides = window:get_config_overrides() or {}
+
+  -- Ne redéfinit que si ça a changé (évite les re-rendus inutiles)
+  if overrides.window_background_image ~= bg_path then
+    overrides.window_background_image = bg_path
+    overrides.window_background_image_hsb = {
+      brightness = 0.15,   -- assombrit l'image pour garder le texte lisible
+      saturation = 0.8,
+      hue        = 1.0,
+    }
+
+
+    window:set_config_overrides(overrides)
+  end
+end)
+
+-- ─────────────────────────────────────────────────────────────
+-- Shells
 -- ─────────────────────────────────────────────────────────────
 local is_windows = wezterm.target_triple:find('windows') ~= nil
- 
+
 if is_windows then
   -- Shell par défaut sur Windows : WSL (distro par défaut)
   config.default_prog = { 'wsl.exe', '--cd', '~'  }
@@ -102,15 +157,16 @@ if is_windows then
     { label = '  PowerShell',    args = { 'pwsh.exe', '-NoLogo' } },
     { label = '  CMD',           args = { 'cmd.exe' } },
   }
-  config.window_background_opacity = 0.95
+  config.window_background_opacity = 0.85
   config.window_decorations = "RESIZE"
 else
   -- commenter si problème sous linux
-  config.window_background_opacity = 0.95
+  config.window_background_opacity = 0.85
 end
- 
+
+
 -- ─────────────────────────────────────────────────────────────
--- Raccourcis utiles
+-- Raccourcis
 -- ─────────────────────────────────────────────────────────────
 local act = wezterm.action
  
@@ -139,10 +195,12 @@ config.keys = {
   { key = '+', mods = 'CTRL', action = act.IncreaseFontSize },
   { key = '-', mods = 'CTRL', action = act.DecreaseFontSize },
   { key = '0', mods = 'CTRL', action = act.ResetFontSize    },
-
   { key = 'n', mods = 'CTRL|SHIFT', action = act.ShowLauncherArgs { flags = 'LAUNCH_MENU_ITEMS' } },
   { key = 'l', mods = 'CTRL|SHIFT', action = act.ShowDebugOverlay },
-
 }
- 
+
+
+
+
+
 return config
