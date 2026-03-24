@@ -99,7 +99,7 @@ local backgrounds = {
   bash  = asset('bash.png'),
   pwsh    = asset('pshell.png'),
   cmd     = asset('cmd.jpg'),
-  default = asset('default.png'),
+  default = asset('bear.png'),
 }
 
 -- Retourne la clé de background en fonction du nom de processus
