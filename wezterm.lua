@@ -14,10 +14,6 @@ config.font_size = 12.0
 config.harfbuzz_features = { 'calt=1', 'clig=1', 'liga=1' } -- ligatures on
  
 -- ─────────────────────────────────────────────────────────────
--- Thème : Catppuccin Mocha
--- Dark, contrastes doux, couleurs pastel modernes.
--- Inclus dans WezTerm (pas de plugin à installer).
--- ─────────────────────────────────────────────────────────────
 config.color_scheme = 'Catppuccin Mocha'
  
 -- ─────────────────────────────────────────────────────────────
@@ -100,6 +96,7 @@ end
 local backgrounds = {
   wsl     = asset('ubuntu.jpg'),
   ubuntu  = asset('ubuntu.jpg'),
+  bash  = asset('bash.png'),
   pwsh    = asset('pshell.png'),
   cmd     = asset('cmd.jpg'),
   default = asset('default.png'),
@@ -114,6 +111,7 @@ local function bg_key_for_process(proc)
   -- wsl.exe lance souvent bash/zsh/fish comme enfant ;
   -- on détecte quand même wsl.exe au premier plan
   if proc:find('wsl')                              then return 'wsl'  end
+  if proc:find('bash')                           then return 'bash' end
   if proc:find('ubuntu')                           then return 'ubuntu' end
   return 'default'
 end
